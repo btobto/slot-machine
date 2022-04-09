@@ -5,16 +5,20 @@ export class Player {
 	}
 
 	reduceBalance() {
-		this.balance -= this.stake;
-
-		if (this.balance <= 0) {
-			// todo
+		if (this.balance - this.stake >= 0) {
+			this.balance -= this.stake;
 		}
 	}
 
-	changeStake(newStake) {
-		if (newStake <= this.balance) {
-			this.stake = newStake;
+	addStake(increment) {
+		if (this.stake + increment <= this.balance) {
+			this.stake += increment;
+		}
+	}
+
+	reduceStake(decrement) {
+		if (this.stake - decrement > 0) {
+			this.stake -= decrement;
 		}
 	}
 }

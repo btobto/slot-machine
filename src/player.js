@@ -13,7 +13,7 @@ export class Player {
 	}
 
 	changeStake(newStake) {
-		if (newStake <= this.stake) {
+		if (newStake <= this.balance) {
 			this.stake = newStake;
 		}
 	}

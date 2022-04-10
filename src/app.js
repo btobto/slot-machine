@@ -110,6 +110,8 @@ function onAssetsLoaded() {
         }
     }
 
+    
+
     app.stage.addChild(reelsContainer);
 
     const footerContainer = new PIXI.Container();
@@ -205,10 +207,36 @@ function play() {
     if (running) {
         return;
     }
+    
+    let line = new PIXI.Graphics();
+
+    line.position.set(0, 0);
+    line.lineStyle(10, 0xff0000, 1)
+        .moveTo(reelsContainer.width/2, reelsContainer.height/3)
+        .lineTo(reelsContainer.width*1.5, reelsContainer.height/3);
+
+    app.stage.addChild(line);
+
+    line = new PIXI.Graphics();
+    line.position.set(0, 0);
+    line.lineStyle(10, 0xff0000, 1)
+    .moveTo(reelsContainer.width/2, 2*reelsContainer.height/3)
+    .lineTo(reelsContainer.width*1.5, 2*reelsContainer.height/3)
+    app.stage.addChild(line);
+
+    line = new PIXI.Graphics();
+    line.position.set(0, 0);
+    line.lineStyle(10, 0xff0000, 1)
+    .moveTo(reelsContainer.width/2, reelsContainer.height)
+    .lineTo(reelsContainer.width*1.5, reelsContainer.height)
+
+    app.stage.addChild(line);
+    
 
     running = true;
 
-    // spinSound.play();
+    spinSound.stop();
+    spinSound.play();
 
     const r = spinSlot(player);
     const mat = r.mat;

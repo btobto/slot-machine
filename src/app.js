@@ -7,9 +7,23 @@ const app = new PIXI.Application({
 });
 document.body.appendChild(app.view);
 
+const reels = [
+    [1, 2, 5, 6], // 7 bar zvono pomorandza
+    [4, 5, 6, 2], 
+    [1, 4, 3, 7]
+];
+
 const player = new Player(500, 10);
 const loader = PIXI.Loader.shared;
+let running = false;
 const stakeIncrement = 5;
+const reelWidth = (app.screen.height - 100) / reels.length;
+const symbolDim = reelWidth - 10;
+const spinSound = new Howl({
+    src: ["./assets/sounds/spinSound.mp3"]
+});
+
+const table = [];
 
 loader
     .add("s1", "./assets/images/s1.png")
@@ -36,9 +50,9 @@ function onAssetsLoaded() {
 
     let coins = new PIXI.Sprite(loader.resources["coins"].texture);
     coins.x = app.screen.width - 3 * margin;
-    coins.y = margin / 8;
-    coins.scale.x *= 0.08;
-    coins.scale.y *= 0.08;
+    coins.y = margin / 9;
+    coins.scale.x *= 0.03;
+    coins.scale.y *= 0.03;
 
     const textStyle = new PIXI.TextStyle({
         dropShadow: true,
@@ -67,6 +81,31 @@ function onAssetsLoaded() {
         headerText,
         balanceText
     );
+
+    const reelsContainer = new PIXI.Container();
+
+    for (let i = 0; i < reels.length; i++) {
+        const reelColumn = new PIXI.Container();
+        reelColumn.x = (app.screen.width - reels.length * reelWidth) / 2 + i * reelWidth;
+        reelsContainer.addChild(reelColumn);
+
+        table.push(reelColumn);
+
+        let index = Math.floor(Math.random() * reels[i].length);
+        for (let j = 0; j < 3; j++) {
+            const symbol = new PIXI.Sprite(loader.resources["s" + reels[i][index]].texture);
+            symbol.x = 0;
+            symbol.y = j * symbolDim + margin;
+            symbol.scale.x *= 0.8;
+            symbol.scale.y = symbol.scale.x;
+
+            index = (index + 1) % reels[i].length;
+
+            reelColumn.addChild(symbol);
+        }
+    }
+
+    app.stage.addChild(reelsContainer);
 
     const footerContainer = new PIXI.Container();
     const footer = new PIXI.Graphics();
@@ -118,7 +157,7 @@ function onAssetsLoaded() {
     });
 
     spinButton.addListener("pointerdown", () => {
-        // play()
+        play();
         player.reduceBalance();
         balanceText.text = player.balance;
     });
@@ -156,4 +195,26 @@ function makeButton(texture, audio, x, y, scale) {
     button.scale.set(scale);
 
     return button;
+}
+
+function play() {
+    if (running) {
+        return;
+    }
+
+    running = true;
+
+    spinSound.play();
+
+    for (let i = 0; i < reels.length; i++) {
+        const reel = table[i];
+        
+        let index = Math.floor(Math.random() * reels[i].length);
+        for (let j = 0; j < 3; j++) {
+            reel.getChildAt(j).texture = loader.resources["s" + reels[i][index]].texture;
+            index = (index + 1) % reels[i].length;
+        }
+    }
+
+    running = false;
 }

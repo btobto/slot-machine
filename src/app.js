@@ -18,7 +18,7 @@ document.body.appendChild(app.view);
 
 const reels = getReels();
 let reelsContainer;
-const player = new Player(500, 50);
+const player = new Player(500, 100);
 const loader = PIXI.Loader.shared;
 let running = false;
 const stakeIncrement = 10;
@@ -55,7 +55,7 @@ function onAssetsLoaded() {
     header.drawRect(0, 0, app.screen.width, margin);
 
     let coins = new PIXI.Sprite(loader.resources["coins"].texture);
-    coins.x = app.screen.width - 3 * margin;
+    coins.x = app.screen.width - 3 * margin - margin / 2;
     coins.y = margin / 9;
     coins.scale.x *= 0.03;
     coins.scale.y *= 0.03;
@@ -78,14 +78,19 @@ function onAssetsLoaded() {
     headerText.y = (margin - headerText.height) / 2;
 
     const balanceText = new PIXI.Text(`${player.balance}`, textStyle);
-    balanceText.x = app.screen.width - 2 * margin;
+    balanceText.x = app.screen.width - 2 * margin - margin / 2;
     balanceText.y = (margin - headerText.height) / 2;
+
+    const pointsText = new PIXI.Text("", textStyle);
+    pointsText.x = margin / 2;
+    pointsText.y = balanceText.y;
 
     headerContainer.addChild(
         header,
         coins,
         headerText,
-        balanceText
+        balanceText,
+        pointsText
     );
 
     reelsContainer = new PIXI.Container();
@@ -163,7 +168,14 @@ function onAssetsLoaded() {
     });
 
     spinButton.addListener("pointerdown", () => {
-        play();
+        const newPoints = play();
+
+        if (newPoints === 0) {
+            pointsText.text = "";
+        } else if (newPoints !== undefined) {
+            pointsText.text = "+" + newPoints;
+        }
+        
         balanceText.text = player.balance;
     });
 
@@ -214,10 +226,15 @@ function play() {
     }
     linesArr = [];
 
-    spinSound.stop();
-    spinSound.play();
+    // spinSound.stop();
+    // spinSound.play();
 
     const r = spinSlot(player);
+
+    if (r === undefined) {
+        return;
+    }
+
     const mat = r.mat;
 
     for (let i = 0; i < 3; i++) {
@@ -320,4 +337,6 @@ function play() {
     // }
 
     running = false;
+
+    return points;
 }

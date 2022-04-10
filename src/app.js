@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { Howl, Howler } from 'howler';
 import { Player } from './player.js';
 import { spinSlot, getReels } from './calculation.js';
+import { Container } from 'pixi.js';
 
 const app = new PIXI.Application({
     width: 800, height: 480, backgroundColor: 0xeff0f1
@@ -13,6 +14,8 @@ document.body.appendChild(app.view);
 //     [4, 5, 6, 2], 
 //     [1, 4, 3, 7]
 // ];
+
+let reelsContainer;
 
 const reels = getReels();
 const player = new Player(500, 50);
@@ -84,7 +87,7 @@ function onAssetsLoaded() {
         balanceText
     );
 
-    const reelsContainer = new PIXI.Container();
+    reelsContainer = new PIXI.Container();
 
     for (let i = 0; i < reels.length; i++) {
         const reelColumn = new PIXI.Container();
@@ -106,6 +109,17 @@ function onAssetsLoaded() {
             reelColumn.addChild(symbol);
         }
     }
+
+    let line = new PIXI.Graphics();
+
+    line.position.set(0, 0);
+
+    reelsContainer.addChild(line);
+
+    line.lineStyle(5, 0x000000)
+    .moveTo(0, 0)
+    .lineTo(reelsContainer.width);
+
 
     app.stage.addChild(reelsContainer);
 
@@ -222,7 +236,7 @@ function play() {
     const points = r.returnVal.points;
 
     if (lines["upper"] === true) {
-        let line = new PIXI.Graphics();
+
     }
 
     if (lines["middle"] === true) {

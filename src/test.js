@@ -1,18 +1,16 @@
 const combos =
 {
-    '111': 10,
-    '222': 6,
-    '333': 6,
-    '444': 5,
-    '555': 5,
-    '224': 4,
-    '334': 3,
-    '666': 3,
-    '332': 2,
-    '442': 2,
-    '552': 2,
-    '662': 2,
-    '77*': 1
+    '111': 20,
+    '222': 15,
+    '333': 9,
+    '444': 8,
+    '555': 7,
+    '666': 6,
+    '332': 5,
+    '442': 5,
+    '552': 4,
+    '662': 3,
+    '77*': 2
 };
 
 const counts =
@@ -22,8 +20,6 @@ const counts =
     '333': 0,
     '444': 0,
     '555': 0,
-    '224': 0,
-    '334': 0,
     '666': 0,
     '332': 0,
     '442': 0,
@@ -34,21 +30,26 @@ const counts =
 
 const log = false;
 
-const oldreel1 = [2, 2, 7, 3, 2, 4, 5, 5, 5, 3, 5, 3, 5, 7, 7, 2, 2, 6, 5, 3, 1, 5, 7, 3, 6];
-const oldreel2 = [4, 5, 6, 2, 3, 1, 8, 6, 3, 2, 4, 2, 8, 7, 6, 4, 8, 6, 5, 2, 4, 4, 5, 6, 3, 2];
-const oldreel3 = [1, 3, 2, 6, 2, 4, 3, 6, 8, 4, 2, 4, 6, 4, 5, 4, 6, 4, 4, 5, 8, 3, 5, 6, 4, 3, 6, 8, 6, 4, 2, 8, 4, 5, 6];
-
-
 let reel1, reel2, reel3;
 
+// reel1 = [1, 2, 4, 5, 2, 2, 4, 7, 3, 6];
+// reel2 = [6, 2, 6, 5, 7, 3, 1, 7, 3, 3, 4, 5];
+// reel3 = [6, 1, 2, 6, 3, 7, 5, 2, 5, 3, 4, 4, 6, 2];
 
-reel1 = [1, 2, 4, 5, 2, 2, 4, 7, 3, 6];
-reel2 = [6, 2, 6, 5, 7, 3, 1, 7, 3, 3, 4, 5];
-reel3 = [6, 1, 2, 6, 3, 7, 5, 2, 5, 3, 4, 4, 6, 2];
+reel1 = [1, 2, 4, 5, 2, 3, 3, 4, 3, 5, 2, 6, 7, 6, 7];
+reel2 = [1, 2, 5, 3, 8, 8, 6, 4, 7, 7, 8, 8, 3, 8, 4, 8, 8];
+reel3 = [1, 2, 2, 3, 8, 5, 3, 4, 4, 8, 3, 8, 6, 8];
 
-// reel1 = [1, 2, 4, 5, 2, 3, 3, 4, 3, 5, 2, 6, 7, 6, 7];
-// reel2 = [1, 2, 5, 3, 8, 8, 6, 4, 7, 7, 8, 8, 3, 8, 4, 8, 8];
-// reel3 = [1, 2, 2, 3, 8, 5, 3, 4, 4, 8, 3, 8, 6, 8];
+let brojevi = {};
+
+// reel3.forEach(br => {
+//     if (!brojevi[br])
+//         brojevi[br] = 0;
+
+//     brojevi[br]++;
+// });
+
+// console.log(brojevi);
 
 const reels = [reel1, reel2, reel3];
 
@@ -58,7 +59,7 @@ const startingBalance = 10000000;
 
 let balance = startingBalance;
 
-const stake = 15;
+const stake = 5;
 
 function randomizeMat(mat, stake) {
     for (let i = 0; i < 3; i++) {
@@ -188,8 +189,8 @@ for (i = 0; i < iterations; i++) {
 
 console.log(`Iterations: ${i}`);
 
-console.log(`Ratio of lineHits : ${(lineHits / iterations) * 100}%`);
-console.log(`balance ${balance}, startingBalance ${startingBalance}`);
+console.log(`Line hit ratio : ${(lineHits / iterations) * 100}%`);
+console.log(`Ending balance ${balance} / ${startingBalance} starting balance`);
 console.log(`RTP: ${(balance / startingBalance) * 100}%`);
 
 console.log(counts);

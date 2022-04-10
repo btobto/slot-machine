@@ -27,6 +27,7 @@ const symbolDim = reelWidth - 10;
 const spinSound = new Howl({
     src: ["./assets/sounds/spinSound.mp3"]
 });
+let linesArr = [];
 
 const table = [];
 
@@ -109,8 +110,6 @@ function onAssetsLoaded() {
             reelColumn.addChild(symbol);
         }
     }
-
-    
 
     app.stage.addChild(reelsContainer);
 
@@ -206,34 +205,14 @@ function makeButton(texture, audio, x, y, scale) {
 function play() {
     if (running) {
         return;
-    }
-    
-    let line = new PIXI.Graphics();
-
-    line.position.set(0, 0);
-    line.lineStyle(10, 0xff0000, 1)
-        .moveTo(reelsContainer.width/2, reelsContainer.height/3)
-        .lineTo(reelsContainer.width*1.5, reelsContainer.height/3);
-
-    app.stage.addChild(line);
-
-    line = new PIXI.Graphics();
-    line.position.set(0, 0);
-    line.lineStyle(10, 0xff0000, 1)
-    .moveTo(reelsContainer.width/2, 2*reelsContainer.height/3)
-    .lineTo(reelsContainer.width*1.5, 2*reelsContainer.height/3)
-    app.stage.addChild(line);
-
-    line = new PIXI.Graphics();
-    line.position.set(0, 0);
-    line.lineStyle(10, 0xff0000, 1)
-    .moveTo(reelsContainer.width/2, reelsContainer.height)
-    .lineTo(reelsContainer.width*1.5, reelsContainer.height)
-
-    app.stage.addChild(line);
-    
+    }    
 
     running = true;
+
+    for (const l of linesArr) {
+        l.clear();
+    }
+    linesArr = [];
 
     spinSound.stop();
     spinSound.play();
@@ -251,25 +230,83 @@ function play() {
 
     const lines = r.returnVal.lineHits;
     const points = r.returnVal.points;
+    
+    let line, line2;
+    let startingPoint = (app.screen.width - reels.length * reelWidth) / 2 - 50 / 2;
+    let endPoint = (app.screen.width - reels.length * reelWidth) / 2 + 3 * reelWidth + 2 * 50 / 2;
 
     if (lines["upper"] === true) {
+        line = new PIXI.Graphics();
+        line.position.set(0, 0);
+        line.lineStyle(10, 0xff0000, 1)
+        .moveTo(startingPoint, reelsContainer.height/3)
+        .lineTo(endPoint, reelsContainer.height/3);
+        
+        app.stage.addChild(line);  
 
+        linesArr.push(line);
     }
 
     if (lines["middle"] === true) {
-        
+        line = new PIXI.Graphics();
+        line.position.set(0, 0);
+        line.lineStyle(10, 0xff0000, 1)
+            .moveTo(startingPoint, 2*reelsContainer.height/3 - 50 / 2)
+            .lineTo(endPoint, 2*reelsContainer.height/3 - 50 / 2);
+
+        app.stage.addChild(line);
+                  
+        linesArr.push(line);
     }
 
     if (lines["lower"] === true) {
+        line = new PIXI.Graphics();
+        line.position.set(0, 0);
+        line.lineStyle(10, 0xff0000, 1)
+            .moveTo(startingPoint, reelsContainer.height - 50 / 2)
+            .lineTo(endPoint, reelsContainer.height - 50 / 2);
+    
+        app.stage.addChild(line);
 
+        linesArr.push(line);
     }
 
     if (lines["upperZigZag"] === true) {
+        line = new PIXI.Graphics();
+        line.position.set(0, 0);
+        line.lineStyle(10, 0x0000FF, 1)
+            .moveTo(startingPoint + reelWidth / 2, reelsContainer.height / 3)
+            .lineTo((startingPoint + endPoint) / 2, 2*reelsContainer.height/3 - 50 / 2 - 10);
+        app.stage.addChild(line);    
+    
+        line2 = new PIXI.Graphics();
+        line2.position.set(0, 0);
+        line2.lineStyle(10, 0x0000FF, 1)
+            .moveTo((startingPoint + endPoint) / 2, 2*reelsContainer.height/3 - 50 / 2 - 10)
+            .lineTo(endPoint - reelWidth / 2, reelsContainer.height / 3);
+        app.stage.addChild(line2);
         
+        linesArr.push(line);
+        linesArr.push(line2);
     }
 
     if (lines["lowerZigZag"] === true) {
+        line = new PIXI.Graphics();
+        line.position.set(0, 0);
+        line.lineStyle(10, 0x0000FF, 1)
+            .moveTo(startingPoint + reelWidth / 2, reelsContainer.height - 50 / 2)
+            .lineTo((startingPoint + endPoint) / 2, 2*reelsContainer.height/3 - 50 / 2 + 10);
+        app.stage.addChild(line);    
+    
+        line2 = new PIXI.Graphics();
+        line2.position.set(0, 0);
+        line2.lineStyle(10, 0x0000FF, 1)
+            .moveTo((startingPoint + endPoint) / 2, 2*reelsContainer.height/3 - 50 / 2 + 10)
+            .lineTo(endPoint - reelWidth / 2, reelsContainer.height - 50 / 2);
+        app.stage.addChild(line2);
         
+        linesArr.push(line);
+        linesArr.push(line2);
     }
 
     // for (let i = 0; i < reels.length; i++) {

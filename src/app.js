@@ -10,12 +10,6 @@ const app = new PIXI.Application({
 });
 document.body.appendChild(app.view);
 
-// const reels = [
-//     [1, 2, 5, 6], // 7 bar zvono pomorandza
-//     [4, 5, 6, 2], 
-//     [1, 4, 3, 7]
-// ];
-
 const reels = getReels();
 let reelsContainer;
 const player = new Player(500, 100);
@@ -25,7 +19,8 @@ const stakeIncrement = 10;
 const reelWidth = (app.screen.height - 100) / reels.length;
 const symbolDim = reelWidth - 10;
 const spinSound = new Howl({
-    src: ["./assets/sounds/spinSound.mp3"]
+    src: ["./assets/sounds/spinSound.mp3"],
+    volume: 0.75
 });
 let linesArr = [];
 
@@ -175,7 +170,7 @@ function onAssetsLoaded() {
         } else if (newPoints !== undefined) {
             pointsText.text = "+" + newPoints;
         }
-        
+
         balanceText.text = player.balance;
     });
 
@@ -226,8 +221,7 @@ function play() {
     }
     linesArr = [];
 
-    // spinSound.stop();
-    // spinSound.play();
+    spinSound.stop();
 
     const r = spinSlot(player);
 
@@ -254,6 +248,8 @@ function play() {
     let endPoint = (app.screen.width - reels.length * reelWidth) / 2 + 3 * reelWidth + 2 * 50 / 2;
 
     if (lines["upper"] === true) {
+        spinSound.play();
+
         line = new PIXI.Graphics();
         line.position.set(0, 0);
         line.lineStyle(10, 0xff0000, 1)
@@ -266,6 +262,8 @@ function play() {
     }
 
     if (lines["middle"] === true) {
+        spinSound.play();
+
         line = new PIXI.Graphics();
         line.position.set(0, 0);
         line.lineStyle(10, 0xff0000, 1)
@@ -278,6 +276,8 @@ function play() {
     }
 
     if (lines["lower"] === true) {
+        spinSound.play();
+
         line = new PIXI.Graphics();
         line.position.set(0, 0);
         line.lineStyle(10, 0xff0000, 1)
@@ -290,6 +290,8 @@ function play() {
     }
 
     if (lines["upperZigZag"] === true) {
+        spinSound.play();
+
         line = new PIXI.Graphics();
         line.position.set(0, 0);
         line.lineStyle(10, 0x0000FF, 1)
@@ -309,6 +311,8 @@ function play() {
     }
 
     if (lines["lowerZigZag"] === true) {
+        spinSound.play();
+
         line = new PIXI.Graphics();
         line.position.set(0, 0);
         line.lineStyle(10, 0x0000FF, 1)

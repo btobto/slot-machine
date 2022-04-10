@@ -6,7 +6,7 @@ import { spinSlot, getReels } from './calculation.js';
 const app = new PIXI.Application({
     width: 800,
     height: 480,
-    backgroundColor: 0xeff0f1
+    backgroundColor: 0x9845a3
 });
 document.body.appendChild(app.view);
 
@@ -51,7 +51,7 @@ function onAssetsLoaded() {
 
     const headerContainer = new PIXI.Container();
     const header = new PIXI.Graphics();
-    header.beginFill(0x234d57);
+    header.beginFill(0x32065F);
     header.drawRect(0, 0, app.screen.width, margin);
 
     let coins = new PIXI.Sprite(loader.resources["coins"].texture);
@@ -64,7 +64,7 @@ function onAssetsLoaded() {
         dropShadow: false,
         dropShadowAngle: 7,
         dropShadowDistance: 8,
-        fill: "#807680",
+        fill: "#b8a016",
         fontFamily: "Arial",
         fontWeight: 900,
         letterSpacing: 4,
@@ -120,7 +120,7 @@ function onAssetsLoaded() {
 
     const footerContainer = new PIXI.Container();
     const footer = new PIXI.Graphics();
-    footer.beginFill(0x234d57);
+    footer.beginFill(0x32065F);
     footer.drawRect(0, app.screen.height - margin, app.screen.width, margin);
 
     const buttonsContainer = new PIXI.Container();
@@ -232,6 +232,7 @@ function play() {
     const r = spinSlot(player);
 
     if (r === undefined) {
+        running = false;
         return;
     }
 

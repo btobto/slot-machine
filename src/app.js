@@ -4,8 +4,8 @@ import { Player } from './player.js';
 import { spinSlot, getReels } from './calculation.js';
 
 const app = new PIXI.Application({
-    width: 800, 
-    height: 480, 
+    width: 800,
+    height: 480,
     backgroundColor: 0xeff0f1
 });
 document.body.appendChild(app.view);
@@ -206,7 +206,7 @@ function makeButton(texture, audio, x, y, scale) {
     button.interactive = true;
     button.buttonMode = true;
     button.on("pointerdown", e => sound.play());
-    
+
     button.x = x;
     button.y = y;
     button.scale.set(scale);
@@ -217,7 +217,7 @@ function makeButton(texture, audio, x, y, scale) {
 function play() {
     if (running) {
         return;
-    }    
+    }
 
     running = true;
 
@@ -247,7 +247,7 @@ function play() {
 
     const lines = r.returnVal.lineHits;
     const points = r.returnVal.points;
-    
+
     let line, line2;
     let startingPoint = (app.screen.width - reels.length * reelWidth) / 2 - 50 / 2;
     let endPoint = (app.screen.width - reels.length * reelWidth) / 2 + 3 * reelWidth + 2 * 50 / 2;
@@ -256,10 +256,10 @@ function play() {
         line = new PIXI.Graphics();
         line.position.set(0, 0);
         line.lineStyle(10, 0xff0000, 1)
-        .moveTo(startingPoint, reelsContainer.height/3)
-        .lineTo(endPoint, reelsContainer.height/3);
-        
-        app.stage.addChild(line);  
+            .moveTo(startingPoint, reelsContainer.height / 3)
+            .lineTo(endPoint, reelsContainer.height / 3);
+
+        app.stage.addChild(line);
 
         linesArr.push(line);
     }
@@ -268,11 +268,11 @@ function play() {
         line = new PIXI.Graphics();
         line.position.set(0, 0);
         line.lineStyle(10, 0xff0000, 1)
-            .moveTo(startingPoint, 2*reelsContainer.height/3 - 50 / 2)
-            .lineTo(endPoint, 2*reelsContainer.height/3 - 50 / 2);
+            .moveTo(startingPoint, 2 * reelsContainer.height / 3 - 50 / 2)
+            .lineTo(endPoint, 2 * reelsContainer.height / 3 - 50 / 2);
 
         app.stage.addChild(line);
-                  
+
         linesArr.push(line);
     }
 
@@ -282,7 +282,7 @@ function play() {
         line.lineStyle(10, 0xff0000, 1)
             .moveTo(startingPoint, reelsContainer.height - 50 / 2)
             .lineTo(endPoint, reelsContainer.height - 50 / 2);
-    
+
         app.stage.addChild(line);
 
         linesArr.push(line);
@@ -293,16 +293,16 @@ function play() {
         line.position.set(0, 0);
         line.lineStyle(10, 0x0000FF, 1)
             .moveTo(startingPoint + reelWidth / 2, reelsContainer.height / 3)
-            .lineTo((startingPoint + endPoint) / 2, 2*reelsContainer.height/3 - 50 / 2 - 10);
-        app.stage.addChild(line);    
-    
+            .lineTo((startingPoint + endPoint) / 2, 2 * reelsContainer.height / 3 - 50 / 2 - 10);
+        app.stage.addChild(line);
+
         line2 = new PIXI.Graphics();
         line2.position.set(0, 0);
         line2.lineStyle(10, 0x0000FF, 1)
-            .moveTo((startingPoint + endPoint) / 2, 2*reelsContainer.height/3 - 50 / 2 - 10)
+            .moveTo((startingPoint + endPoint) / 2, 2 * reelsContainer.height / 3 - 50 / 2 - 10)
             .lineTo(endPoint - reelWidth / 2, reelsContainer.height / 3);
         app.stage.addChild(line2);
-        
+
         linesArr.push(line);
         linesArr.push(line2);
     }
@@ -312,29 +312,19 @@ function play() {
         line.position.set(0, 0);
         line.lineStyle(10, 0x0000FF, 1)
             .moveTo(startingPoint + reelWidth / 2, reelsContainer.height - 50 / 2)
-            .lineTo((startingPoint + endPoint) / 2, 2*reelsContainer.height/3 - 50 / 2 + 10);
-        app.stage.addChild(line);    
-    
+            .lineTo((startingPoint + endPoint) / 2, 2 * reelsContainer.height / 3 - 50 / 2 + 10);
+        app.stage.addChild(line);
+
         line2 = new PIXI.Graphics();
         line2.position.set(0, 0);
         line2.lineStyle(10, 0x0000FF, 1)
-            .moveTo((startingPoint + endPoint) / 2, 2*reelsContainer.height/3 - 50 / 2 + 10)
+            .moveTo((startingPoint + endPoint) / 2, 2 * reelsContainer.height / 3 - 50 / 2 + 10)
             .lineTo(endPoint - reelWidth / 2, reelsContainer.height - 50 / 2);
         app.stage.addChild(line2);
-        
+
         linesArr.push(line);
         linesArr.push(line2);
     }
-
-    // for (let i = 0; i < reels.length; i++) {
-    //     const reel = table[i];
-        
-    //     let index = Math.floor(Math.random() * reels[i].length);
-    //     for (let j = 0; j < 3; j++) {
-    //         reel.getChildAt(j).texture = loader.resources["s" + reels[i][index]].texture;
-    //         index = (index + 1) % reels[i].length;
-    //     }
-    // }
 
     running = false;
 

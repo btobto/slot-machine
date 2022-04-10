@@ -1,22 +1,24 @@
 import * as PIXI from 'pixi.js';
 import { Howl, Howler } from 'howler';
-import { Player } from './player';
+import { Player } from './player.js';
+import { spinSlot, getReels } from './calculation.js';
 
 const app = new PIXI.Application({
     width: 800, height: 480, backgroundColor: 0xeff0f1
 });
 document.body.appendChild(app.view);
 
-const reels = [
-    [1, 2, 5, 6], // 7 bar zvono pomorandza
-    [4, 5, 6, 2], 
-    [1, 4, 3, 7]
-];
+// const reels = [
+//     [1, 2, 5, 6], // 7 bar zvono pomorandza
+//     [4, 5, 6, 2], 
+//     [1, 4, 3, 7]
+// ];
 
-const player = new Player(500, 10);
+const reels = getReels();
+const player = new Player(500, 50);
 const loader = PIXI.Loader.shared;
 let running = false;
-const stakeIncrement = 5;
+const stakeIncrement = 10;
 const reelWidth = (app.screen.height - 100) / reels.length;
 const symbolDim = reelWidth - 10;
 const spinSound = new Howl({
@@ -158,7 +160,6 @@ function onAssetsLoaded() {
 
     spinButton.addListener("pointerdown", () => {
         play();
-        player.reduceBalance();
         balanceText.text = player.balance;
     });
 
@@ -206,15 +207,49 @@ function play() {
 
     spinSound.play();
 
-    for (let i = 0; i < reels.length; i++) {
-        const reel = table[i];
-        
-        let index = Math.floor(Math.random() * reels[i].length);
+    const r = spinSlot(player);
+    const mat = r.mat;
+
+    for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            reel.getChildAt(j).texture = loader.resources["s" + reels[i][index]].texture;
-            index = (index + 1) % reels[i].length;
+            if (mat !== undefined) {
+                table[i].getChildAt(j).texture = loader.resources["s" + mat[j][i]].texture;
+            }
         }
     }
+
+    const lines = r.returnVal.lineHits;
+    const points = r.returnVal.points;
+
+    if (lines["upper"] === true) {
+        let line = new PIXI.Graphics();
+    }
+
+    if (lines["middle"] === true) {
+        
+    }
+
+    if (lines["lower"] === true) {
+
+    }
+
+    if (lines["upperZigZag"] === true) {
+        
+    }
+
+    if (lines["lowerZigZag"] === true) {
+        
+    }
+
+    // for (let i = 0; i < reels.length; i++) {
+    //     const reel = table[i];
+        
+    //     let index = Math.floor(Math.random() * reels[i].length);
+    //     for (let j = 0; j < 3; j++) {
+    //         reel.getChildAt(j).texture = loader.resources["s" + reels[i][index]].texture;
+    //         index = (index + 1) % reels[i].length;
+    //     }
+    // }
 
     running = false;
 }

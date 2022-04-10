@@ -17,40 +17,42 @@ const combos =
     '77*': 2
 };
 
-const log = false;
+const log = true;
+let mat = [];
 
 let reel1, reel2, reel3;
-
-reel1 = [1, 2, 4, 5, 2, 2, 4, 7, 3, 6];
-reel2 = [6, 2, 6, 5, 7, 3, 1, 7, 3, 3, 4, 5];
-reel3 = [6, 1, 2, 6, 3, 7, 5, 2, 5, 3, 4, 4, 6, 2];
-
-// reel1 = [1, 2, 4, 5, 2, 3, 3, 4, 3, 5, 2, 6, 7, 6, 7];
-// reel2 = [1, 2, 5, 3, 8, 8, 6, 4, 7, 7, 8, 8, 3, 8, 4, 8, 8];
-// reel3 = [1, 2, 2, 3, 8, 5, 3, 4, 4, 8, 3, 8, 6, 8];
+reel1 = [1, 2, 4, 5, 2, 3, 3, 4, 3, 5, 2, 6, 7, 6, 7];
+reel2 = [1, 2, 5, 3, 8, 8, 6, 4, 7, 7, 8, 8, 3, 8, 4, 8, 8];
+reel3 = [1, 2, 2, 3, 8, 5, 3, 4, 4, 8, 3, 8, 6, 8];
 
 const reels = [reel1, reel2, reel3];
 
-function spinSlot(player) {
+export function getReels() {
+    return reels;
+}
+
+export function spinSlot(player) {
     if (player.balance < player.stake) {
-        console.log("No money left!");
+        alert("No money left!");
         return;
     }
     
-    let mat = [];
+    mat = [];
     for (let i = 0; i < 3; i++) {
         mat[i] = [];
     }
 
-    randomizeMat(mat, player);
+    randomizeMat(mat);
 
-    let returnVal = check(mat);
+    let returnVal = check(mat, player);
 
-    player.balance -= stake;
+    player.reduceBalance();
     player.balance += returnVal.points;
+
+    return {mat, returnVal};
 }
 
-function randomizeMat(mat, player) {
+function randomizeMat(mat) {
     let i = 0;
     reels.forEach(reel => {
         let randomIndex = parseInt(Math.random() * 100, 10);
@@ -64,18 +66,32 @@ function randomizeMat(mat, player) {
         console.table(mat);
 }
 
-function check(mat) {
-    let lineHits = 0;
+function check(mat, player) {
     let points = 0;
 
-    let comboString = undefined;
+    let comboString;
+
+    let lineHits = {
+        "upper": false,
+        "middle": false,
+        "lower": false,
+        "upperZigZag": false,
+        "lowerZigZag": false
+    }
 
     // horizontal line
     for (let i = 0; i < 3; i++) {
         if (mat[i][0] === 7 && mat[i][1] === 7 && mat[i][2] !== 7) {
-            lineHits++;
-            points += stake*combos['77*'];
-            counts['77*']++;
+            
+            if (i === 0) {
+                lineHits["upper"] = true;
+            } else if (i === 1) {
+                lineHits["middle"] = true;
+            } else if (i === 2) {
+                lineHits["lower"] = true;
+            }
+
+            points += player.stake*combos['77*'];
             if (log) {
                 console.log("Line at row" + i);
                 console.log(comboString);
@@ -85,9 +101,16 @@ function check(mat) {
             comboString = "" + mat[i][0] + mat[i][1] + mat[i][2];
 
             if (combos[comboString] !== undefined) {
-                lineHits++;
-                points += stake*combos[comboString];
-                counts[comboString]++;
+
+                if (i === 0) {
+                    lineHits["upper"] = true;
+                } else if (i === 1) {
+                    lineHits["middle"] = true;
+                } else if (i === 2) {
+                    lineHits["lower"] = true;
+                }    
+
+                points += player.stake*combos[comboString];
                 if (log) {
                     console.log("Line at row" + i);
                     console.log(comboString);
@@ -100,9 +123,10 @@ function check(mat) {
 
     // upper zig-zag
     if (mat[0][0] === 7 && mat[1][1] === 7 && mat[0][2] !== 7) {
-        lineHits++;
-        points += stake*combos['77*'];
-        counts['77*']++;
+
+        lineHits["upperZigZag"] = true;
+
+        points += player.stake*combos['77*'];
         if (log) {
             console.log("Upper zig-zag", comboString);
         }
@@ -111,9 +135,10 @@ function check(mat) {
         comboString = "" + mat[0][0] + mat[1][1] + mat[0][2];
 
         if (combos[comboString] !== undefined) {
-            lineHits++;
-            points += stake*combos[comboString];
-            counts[comboString]++;
+
+            lineHits["upperZigZag"] = true;
+
+            points += player.stake*combos[comboString];
             if (log) {
                 console.log("Upper zig-zag", comboString);
             }
@@ -124,9 +149,9 @@ function check(mat) {
     // lower zig-zag
 
     if (mat[2][0] === 7 && mat[1][1] === 7 && mat[2][2] !== 7) {
-        lineHits++;
-        points += stake*combos['77*'];
-        counts['77*']++;
+        lineHits["lowerZigZag"] = true;
+
+        points += player.stake*combos['77*'];
         if (log) {
             console.log("Lower zig-zag", comboString);
         }
@@ -135,9 +160,9 @@ function check(mat) {
         comboString = "" + mat[2][0] + mat[1][1] + mat[2][2];
 
         if (combos[comboString] != undefined) {
-            lineHits++;
-            points += stake*combos[comboString];
-            counts[comboString]++;
+            lineHits["lowerZigZag"] = true;
+
+            points += player.stake*combos[comboString];
             if (log) {
                 console.log("Lower zig-zag", comboString);
             }

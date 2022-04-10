@@ -42,8 +42,8 @@ loader
     .add("s8", "./assets/images/s8.png")
     .add("coins", "./assets/images/coin.png")
     .add("spin", "./assets/images/spin.png")
-    .add("leftBtn", "./assets/images/leftButton.png")
-    .add("rightBtn", "./assets/images/rightButton.png")
+    .add("leftBtn", "./assets/images/left.png")
+    .add("rightBtn", "./assets/images/right.png")
     .load(onAssetsLoaded);
 
 function onAssetsLoaded() {
@@ -127,7 +127,7 @@ function onAssetsLoaded() {
         "./assets/sounds/buttonClick.mp3",
         app.screen.width / 2 + 2 * margin,
         app.screen.height - 4 / 5 * margin,
-        0.05
+        0.06
     );
 
     const leftButton = makeButton(
@@ -135,7 +135,7 @@ function onAssetsLoaded() {
         "./assets/sounds/buttonClick.mp3",
         app.screen.width / 2 - 2 * margin - rightButton.width,
         app.screen.height - 4 / 5 * margin,
-        0.05
+        0.06
     );
 
     const spinButton = makeButton(

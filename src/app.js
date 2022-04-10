@@ -10,12 +10,6 @@ const app = new PIXI.Application({
 });
 document.body.appendChild(app.view);
 
-// const reels = [
-//     [1, 2, 5, 6], // 7 bar zvono pomorandza
-//     [4, 5, 6, 2], 
-//     [1, 4, 3, 7]
-// ];
-
 const reels = getReels();
 let reelsContainer;
 const player = new Player(500, 100);

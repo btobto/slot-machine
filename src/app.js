@@ -335,3 +335,4 @@ function play() {
 
     return points;
 }
+// ...
